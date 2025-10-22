@@ -2,7 +2,11 @@
 
 A framework-agnostic, production-ready SDK for building confidential dApps with Zama's Fully Homomorphic Encryption (FHE) technology.
 
-🎥 **[Video Demo](./demo.mp4)** | 🚀 **[Live Demo](https://fhevm-sdk-demo.vercel.app)** | 📚 **[Documentation](./docs/)**
+🎥 **Demo Video**: Download `demo.mp4` to watch the demonstration (video links cannot be opened directly)
+
+🌐 **Live Example**: [https://fhe-legal-fee-allocation.vercel.app/](https://fhe-legal-fee-allocation.vercel.app/)
+
+📦 **GitHub Repository**: [https://github.com/ValentinJacobs/fhevm-react-template](https://github.com/ValentinJacobs/fhevm-react-template)
 
 ---
 
@@ -66,7 +70,8 @@ fhevm-react-template/
 ├── docs/                             # Documentation
 │   ├── getting-started.md
 │   ├── api-reference.md
-│   └── examples.md
+│   ├── examples.md
+│   └── best-practices.md
 │
 ├── demo.mp4                          # Video demonstration
 ├── package.json                      # Root package
@@ -82,7 +87,7 @@ fhevm-react-template/
 
 ```bash
 # 1. Clone and install
-git clone <repository-url>
+git clone https://github.com/ValentinJacobs/fhevm-react-template
 cd fhevm-react-template
 npm install
 
@@ -240,6 +245,8 @@ Located in `examples/nextjs-legal-allocation/`
 ```bash
 npm run dev:nextjs
 ```
+
+**Live Demo:** [https://fhe-legal-fee-allocation.vercel.app/](https://fhe-legal-fee-allocation.vercel.app/)
 
 ### React Example
 
@@ -491,13 +498,15 @@ const { call, read, isLoading } = useContract(
 
 ## 🎥 Video Demonstration
 
-See `demo.mp4` for a complete walkthrough showing:
+Download `demo.mp4` for a complete walkthrough showing:
 
 1. **Quick Setup** - Installing and initializing the SDK
 2. **Multi-Framework Usage** - SDK working in Next.js, React, Vue, and Node.js
 3. **Complete Workflow** - Encryption → Contract Call → Decryption
 4. **Live Integration** - Real dApp using the SDK
 5. **Developer Experience** - Code walkthrough and best practices
+
+**Note**: Video links cannot be opened directly - please download the file to watch.
 
 ---
 
@@ -508,7 +517,6 @@ Comprehensive documentation available in `/docs`:
 - **[Getting Started](./docs/getting-started.md)** - Installation and first steps
 - **[API Reference](./docs/api-reference.md)** - Complete API documentation
 - **[Examples](./docs/examples.md)** - Code examples for common use cases
-- **[Migration Guide](./docs/migration.md)** - Migrating from other solutions
 - **[Best Practices](./docs/best-practices.md)** - Tips and recommendations
 
 ---
@@ -553,19 +561,28 @@ Comprehensive documentation available in `/docs`:
 
 ---
 
-## 🚢 Deployment
+## 🚢 Live Deployment
 
-### Live Deployments
+### Example Application
 
-- **Next.js Example**: [https://fhevm-legal-allocation.vercel.app](https://fhevm-legal-allocation.vercel.app)
-- **React Example**: [https://fhevm-react-basic.vercel.app](https://fhevm-react-basic.vercel.app)
-- **Documentation**: [https://fhevm-sdk-docs.vercel.app](https://fhevm-sdk-docs.vercel.app)
+**Next.js Legal Allocation App**: [https://fhe-legal-fee-allocation.vercel.app/](https://fhe-legal-fee-allocation.vercel.app/)
 
-### Contract Deployments
+This live application demonstrates:
+- Complete SDK integration with Next.js 14
+- Encrypted case management
+- Private fee allocation
+- Secure payment tracking
+- Production-ready deployment
 
-- **Sepolia**: `0x...` ([Etherscan](https://sepolia.etherscan.io/address/0x...))
-- **Network**: Sepolia Testnet
-- **Status**: ✅ Verified
+### Demo Video
+
+Download `demo.mp4` from the repository to see:
+- Full application walkthrough
+- SDK usage examples
+- Encryption/decryption flow
+- Multi-party interactions
+
+**Note**: Video must be downloaded to watch - links cannot be opened directly.
 
 ---
 
@@ -592,9 +609,15 @@ MIT License - see [LICENSE](./LICENSE) for details.
 ## 📞 Support
 
 - **Documentation**: [/docs](./docs)
-- **Issues**: [GitHub Issues](https://github.com/...)
-- **Discord**: [Zama Discord](https://discord.gg/zama)
-- **Email**: support@example.com
+- **GitHub Issues**: [https://github.com/ValentinJacobs/fhevm-react-template/issues](https://github.com/ValentinJacobs/fhevm-react-template/issues)
+- **Zama Discord**: [https://discord.gg/zama](https://discord.gg/zama)
+
+---
+
+## 🔗 Related Projects
+
+- **Main Application**: [FHE Legal Fee Allocation](https://github.com/ValentinJacobs/FHELegalFeeAllocation)
+- **Live Demo**: [https://fhe-legal-fee-allocation.vercel.app/](https://fhe-legal-fee-allocation.vercel.app/)
 
 ---
 
