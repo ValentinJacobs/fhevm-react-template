@@ -1,14 +1,15 @@
 /**
  * Universal FHEVM SDK
  *
- * Framework-agnostic development kit for building confidential dApps
+ * Framework-agnostic development kit for building confidential applications
  * with Zama's Fully Homomorphic Encryption technology.
  *
  * @packageDocumentation
  */
 
-// Core client
+// Core client (maintain backward compatibility)
 export { FhevmClient } from './client/FhevmClient';
+export { FhevmClient as FhevmClientCore } from './core/fhevm';
 
 // Types
 export type {
@@ -20,6 +21,9 @@ export type {
   DecryptionUtils,
   PublicDecryptionUtils,
 } from './types';
+
+// Utilities
+export * from './utils';
 
 // Standalone utility functions for framework-agnostic usage
 export async function createFhevmClient(config: import('./types').FhevmConfig) {
