@@ -32,32 +32,81 @@ fhevm-react-template/
 ├── packages/
 │   └── fhevm-sdk/                    # 🎯 Core SDK Package
 │       ├── src/
-│       │   ├── client/               # Client initialization
-│       │   ├── encryption/           # Encryption utilities
-│       │   ├── decryption/           # Decryption utilities
-│       │   ├── hooks/                # React hooks (optional)
-│       │   ├── utils/                # Helper functions
-│       │   └── index.ts              # Main exports
+│       │   ├── core/                 # Core FHEVM client implementation
+│       │   │   ├── fhevm.ts          # Main FhevmClient class
+│       │   │   └── index.ts          # Core exports
+│       │   ├── client/               # Legacy client (backward compatibility)
+│       │   ├── hooks/                # React hooks
+│       │   │   ├── useFhevmClient.tsx
+│       │   │   ├── useEncryption.tsx
+│       │   │   ├── useDecryption.tsx
+│       │   │   ├── useContract.tsx
+│       │   │   └── index.ts
+│       │   ├── adapters/             # Framework adapters
+│       │   │   ├── react.ts          # React adapter
+│       │   │   ├── vue.ts            # Vue 3 adapter
+│       │   │   ├── nodejs.ts         # Node.js adapter
+│       │   │   └── index.ts
+│       │   ├── utils/                # Utility functions
+│       │   │   ├── encryption.ts     # Encryption helpers
+│       │   │   ├── decryption.ts     # Decryption helpers
+│       │   │   ├── validation.ts     # Validation utilities
+│       │   │   └── index.ts
+│       │   ├── types.ts              # TypeScript type definitions
+│       │   ├── index.ts              # Main entry point
+│       │   ├── react.ts              # React-specific exports
+│       │   └── vue.ts                # Vue-specific exports
 │       ├── package.json
 │       └── README.md
 │
-├── examples/
+├── examples/ (also accessible as templates/)
 │   ├── nextjs-legal-allocation/      # Next.js + SDK integration
 │   │   ├── app/                      # Next.js 14 App Router
+│   │   │   ├── api/                  # API routes for FHE operations
+│   │   │   │   ├── fhe/             # FHE operation endpoints
+│   │   │   │   │   ├── route.ts     # Main FHE route
+│   │   │   │   │   ├── encrypt/     # Encryption endpoint
+│   │   │   │   │   ├── decrypt/     # Decryption endpoint
+│   │   │   │   │   └── compute/     # Computation info endpoint
+│   │   │   │   └── keys/            # Key management endpoint
+│   │   │   ├── layout.tsx            # Root layout
+│   │   │   └── page.tsx              # Homepage
 │   │   ├── components/               # Reusable components
-│   │   ├── lib/                      # SDK integration
+│   │   │   ├── fhe/                  # FHE-specific components
+│   │   │   │   ├── FHEProvider.tsx   # FHE context provider
+│   │   │   │   ├── EncryptionDemo.tsx # Encryption demo
+│   │   │   │   ├── ComputationDemo.tsx # Computation demo
+│   │   │   │   └── KeyManager.tsx    # Key management
+│   │   │   └── ui/                   # Basic UI components
+│   │   ├── lib/                      # SDK integration utilities
+│   │   │   ├── fhe/                  # FHE integration
+│   │   │   │   ├── client.ts         # Client-side operations
+│   │   │   │   ├── keys.ts           # Key management
+│   │   │   │   └── types.ts          # Type definitions
+│   │   │   └── utils/                # Utility functions
+│   │   ├── hooks/                    # Custom React hooks
+│   │   │   ├── useFHE.ts             # Main FHE hook
+│   │   │   ├── useEncryption.ts      # Encryption hook
+│   │   │   └── useComputation.ts     # Computation hook
 │   │   └── package.json
 │   │
 │   ├── react-basic/                  # Basic React example
 │   │   ├── src/
+│   │   │   ├── App.tsx               # Main app with SDK integration
+│   │   │   └── main.tsx              # Entry point
+│   │   ├── vite.config.ts
 │   │   └── package.json
 │   │
 │   ├── vue-example/                  # Vue.js example
 │   │   ├── src/
+│   │   │   ├── App.vue               # Main app with SDK integration
+│   │   │   └── main.ts               # Entry point
+│   │   ├── vite.config.ts
 │   │   └── package.json
 │   │
 │   └── nodejs-cli/                   # Node.js CLI example
 │       ├── src/
+│       │   └── index.ts              # CLI with SDK integration
 │       └── package.json
 │
 ├── contracts/                         # Smart contracts
@@ -136,26 +185,44 @@ const result = await client.decrypt.uint32(encryptedResult, contractAddress);
 
 ```
 @fhevm/sdk
-├── FhevmClient          # Main client for all operations
-├── Encryption           # Encrypt inputs for contracts
-├── Decryption           # Decrypt outputs from contracts
-├── Hooks (React)        # React hooks for easy integration
-└── Utils                # Helper functions
+├── core/                # Core FHEVM functionality
+│   └── FhevmClient      # Main client for all operations
+├── adapters/            # Framework-specific integrations
+│   ├── react.ts         # React hooks
+│   ├── vue.ts           # Vue 3 composables
+│   └── nodejs.ts        # Node.js utilities
+├── utils/               # Utility functions
+│   ├── encryption.ts    # Encryption helpers
+│   ├── decryption.ts    # Decryption helpers
+│   └── validation.ts    # Validation utilities
+└── hooks/               # React hooks (useFhevmClient, useEncryption, etc.)
 ```
 
 ### Wagmi-like API Structure
 
 ```typescript
-// Initialization (like wagmi's WagmiConfig)
+// Framework-agnostic initialization
+import { FhevmClient } from '@fhevm/sdk';
 const client = await FhevmClient.create(config);
 
-// Hooks (like wagmi's useAccount, useContract)
+// React Hooks (like wagmi's useAccount, useContract)
+import { useFhevmClient, useEncryption, useDecryption, useContract } from '@fhevm/sdk/react';
+const client = useFhevmClient();
 const { encrypt } = useEncryption(client);
 const { decrypt } = useDecryption(client);
 const { call } = useContract(client, contractAddress, abi);
 
-// Standalone utilities (like wagmi's standalone functions)
-import { encryptUint32, decryptUint64 } from '@fhevm/sdk';
+// Vue 3 Composables
+import { useFhevmClient, useEncryption, useDecryption } from '@fhevm/sdk/vue';
+const { client, initialize } = useFhevmClient(config);
+const { encryptUint32, encryptUint64 } = useEncryption(client);
+
+// Node.js Adapter
+import { createNodeClient } from '@fhevm/sdk/adapters/nodejs';
+const client = await createNodeClient(config);
+
+// Utility Functions
+import { validateEncryptedData, isValidAddress, formatEncryptedHandle } from '@fhevm/sdk';
 ```
 
 ---
@@ -235,11 +302,20 @@ const publicValue = await client.publicDecrypt.uint64(
 Located in `examples/nextjs-legal-allocation/`
 
 **Features:**
-- Next.js 14 App Router
+- Next.js 14 App Router with API routes
 - Server and Client Components
-- SDK integration with React hooks
+- Complete SDK integration with React hooks
+- API routes for FHE operations (encrypt, decrypt, compute)
+- FHE components (FHEProvider, EncryptionDemo, ComputationDemo, KeyManager)
+- Custom hooks (useFHE, useEncryption, useComputation)
 - TypeScript support
 - Tailwind CSS styling
+
+**Structure:**
+- `app/api/` - API routes demonstrating FHE endpoints
+- `components/fhe/` - Reusable FHE components
+- `lib/fhe/` - Client-side FHE integration utilities
+- `hooks/` - Custom React hooks for FHE operations
 
 **Run:**
 ```bash
@@ -253,45 +329,79 @@ npm run dev:nextjs
 Located in `examples/react-basic/`
 
 **Features:**
-- Vite + React
-- SDK hooks integration
-- Minimal setup
+- Vite + React 18
+- Direct SDK integration without hooks
+- FHEVM client initialization
+- Encryption demonstration
+- Minimal setup for quick start
 - Hot reload
+- TypeScript support
+
+**Demonstrates:**
+- Client initialization with MetaMask
+- Creating encrypted inputs
+- Value encryption (uint32)
+- Handling encrypted handles and proofs
 
 **Run:**
 ```bash
 npm run dev:react
 ```
 
+Open `http://localhost:3001`
+
 ### Vue.js Example
 
 Located in `examples/vue-example/`
 
 **Features:**
-- Vue 3 Composition API
-- SDK adapter for Vue
+- Vue 3 with Composition API
+- Reactive SDK integration
+- FHEVM client state management
+- Encryption demonstration
 - TypeScript support
 - Vite build
+
+**Demonstrates:**
+- Using SDK with Vue's reactivity system (ref, computed)
+- Client initialization in Vue components
+- Reactive state management for FHE operations
+- Vue-friendly error handling
 
 **Run:**
 ```bash
 npm run dev:vue
 ```
 
+Open `http://localhost:3002`
+
 ### Node.js CLI Example
 
 Located in `examples/nodejs-cli/`
 
 **Features:**
-- Pure Node.js
-- CLI interface
-- No browser required
-- Automated workflows
+- Pure Node.js (no browser dependencies)
+- Interactive CLI interface
+- Framework-agnostic SDK usage
+- Works with JSON-RPC providers
+- Private key wallet integration
+- TypeScript support
+
+**Demonstrates:**
+- Using SDK in server/CLI environment
+- Client initialization without browser
+- Working with ethers.js provider
+- Encryption in non-browser context
+- Interactive menu system
 
 **Run:**
 ```bash
 npm run dev:nodejs
 ```
+
+**Usage:**
+- Provide RPC URL, private key, and contract address
+- Choose from menu: encrypt values, view client info, exit
 
 ---
 
@@ -439,20 +549,82 @@ class FhevmClient {
 
 ```typescript
 // Use FHEVM client
+import { useFhevmClient } from '@fhevm/sdk/react';
 const client = useFhevmClient();
 
 // Encryption hook
+import { useEncryption } from '@fhevm/sdk/react';
 const { encrypt, isEncrypting } = useEncryption(client);
 
 // Decryption hook
+import { useDecryption } from '@fhevm/sdk/react';
 const { decrypt, isDecrypting } = useDecryption(client);
 
 // Contract hook
+import { useContract } from '@fhevm/sdk/react';
 const { call, read, isLoading } = useContract(
   client,
   contractAddress,
   abi
 );
+```
+
+### Vue Composables
+
+```typescript
+// Use FHEVM client
+import { useFhevmClient } from '@fhevm/sdk/vue';
+const { client, isInitialized, initialize } = useFhevmClient(config);
+
+// Encryption composable
+import { useEncryption } from '@fhevm/sdk/vue';
+const { encryptUint32, encryptUint64, encryptBool, isEncrypting } = useEncryption(client);
+
+// Decryption composable
+import { useDecryption } from '@fhevm/sdk/vue';
+const { decryptUint32, decryptUint64, isDecrypting } = useDecryption(client);
+```
+
+### Utility Functions
+
+```typescript
+// Encryption utilities
+import {
+  validateEncryptedData,
+  formatEncryptedHandle,
+  isWithinBounds,
+  toEncryptionValue
+} from '@fhevm/sdk';
+
+// Decryption utilities
+import {
+  formatDecryptedValue,
+  isValidHandle,
+  parseDecryptionResult
+} from '@fhevm/sdk';
+
+// Validation utilities
+import {
+  isValidAddress,
+  isValidContractAddress,
+  isValidNetwork,
+  isValidChainId,
+  isValidUint
+} from '@fhevm/sdk';
+```
+
+### Node.js Adapter
+
+```typescript
+// Create Node.js client
+import { createNodeClient, loadConfigFromEnv } from '@fhevm/sdk/adapters/nodejs';
+
+const config = loadConfigFromEnv();
+const client = await createNodeClient({
+  ...config,
+  provider: 'https://sepolia.infura.io/v3/YOUR_KEY',
+  privateKey: process.env.PRIVATE_KEY,
+});
 ```
 
 ---
@@ -483,16 +655,18 @@ const { call, read, isLoading } = useContract(
 
 ## 📊 Comparison with Alternatives
 
-| Feature | This SDK | fhevm-react-template | Manual Integration |
-|---------|----------|----------------------|-------------------|
-| Framework Agnostic | ✅ | ❌ | ✅ |
-| Wagmi-like API | ✅ | ❌ | ❌ |
-| TypeScript | ✅ | ⚠️ Partial | ⚠️ Manual |
-| React Hooks | ✅ | ✅ | ❌ |
-| Vue Support | ✅ | ❌ | ❌ |
-| Node.js Support | ✅ | ❌ | ✅ |
+| Feature | This SDK | Traditional Integration | Manual Setup |
+|---------|----------|-------------------------|--------------|
+| Framework Agnostic | ✅ Yes | ❌ No | ✅ Yes |
+| Wagmi-like API | ✅ Yes | ❌ No | ❌ No |
+| TypeScript Support | ✅ Full | ⚠️ Partial | ⚠️ Manual |
+| React Hooks | ✅ Built-in | ⚠️ Custom | ❌ None |
+| Vue Composables | ✅ Built-in | ❌ None | ❌ None |
+| Node.js Adapter | ✅ Built-in | ❌ None | ✅ Manual |
+| Utility Functions | ✅ Included | ❌ None | ❌ None |
 | Setup Time | < 10 lines | 50+ lines | 100+ lines |
 | Documentation | ✅ Extensive | ⚠️ Basic | ❌ None |
+| Multiple Examples | ✅ 4+ frameworks | ⚠️ 1 framework | ❌ None |
 
 ---
 
